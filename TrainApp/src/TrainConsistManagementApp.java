@@ -1,52 +1,24 @@
 import java.util.*;
 
-class PassengerBogie {
-    String id;
-    String type;
-    int capacity;
-
-    public PassengerBogie(String id, String type, int capacity) {
-        this.id = id;
-        this.type = type;
-        this.capacity = capacity;
-    }
-
-    public String toString() {
-        return "ID: " + id + ", Type: " + type + ", Capacity: " + capacity;
-    }
-}
-
-class Train {
-    private ArrayList<PassengerBogie> bogies = new ArrayList<>();
-    private HashSet<String> bogieIds = new HashSet<>();
-
-    public void addBogie(PassengerBogie b) {
-        if (bogieIds.contains(b.id)) {
-            System.out.println("Duplicate Bogie ID not allowed: " + b.id);
-            return;
-        }
-        bogies.add(b);
-        bogieIds.add(b.id);
-        System.out.println("Bogie added: " + b.id);
-    }
-
-    public void displayBogies() {
-        System.out.println("\nPassenger Bogies in Train:");
-        for (PassengerBogie b : bogies) {
-            System.out.println(b);
-        }
-    }
-}
-
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
 
-        Train train = new Train();
+        LinkedList<String> train = new LinkedList<>();
 
-        train.addBogie(new PassengerBogie("BG101", "Sleeper", 72));
-        train.addBogie(new PassengerBogie("BG102", "AC Chair", 60));
-        train.addBogie(new PassengerBogie("BG101", "First Class", 40));
+        train.add("Engine");
+        train.add("Sleeper");
+        train.add("AC");
+        train.add("Cargo");
+        train.add("Guard");
 
-        train.displayBogies();
+        train.add(2, "Pantry");
+
+        train.removeFirst();
+        train.removeLast();
+
+        System.out.println("Final Train Consist:");
+        for (String bogie : train) {
+            System.out.println(bogie);
+        }
     }
 }
