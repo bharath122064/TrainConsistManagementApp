@@ -1,47 +1,44 @@
 import java.util.*;
-import java.util.stream.*;
 
-class Bogie {
+class InvalidCapacityException extends Exception {
+    public InvalidCapacityException(String message) {
+        super(message);
+    }
+}
+
+class PassengerBogie {
     String name;
     int capacity;
 
-    public Bogie(String name, int capacity) {
+    public PassengerBogie(String name, int capacity) throws InvalidCapacityException {
+        if (capacity <= 0) {
+            throw new InvalidCapacityException("Invalid capacity for bogie: " + name);
+        }
         this.name = name;
         this.capacity = capacity;
+    }
+
+    public String toString() {
+        return name + " -> " + capacity;
     }
 }
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
 
-        List<Bogie> bogies = new ArrayList<>();
+        List<PassengerBogie> bogies = new ArrayList<>();
 
-        for (int i = 0; i < 100000; i++) {
-            bogies.add(new Bogie("Sleeper", 72));
-            bogies.add(new Bogie("AC Chair", 60));
-            bogies.add(new Bogie("First Class", 40));
+        try {
+            bogies.add(new PassengerBogie("Sleeper", 72));
+            bogies.add(new PassengerBogie("AC Chair", 60));
+            bogies.add(new PassengerBogie("First Class", -10));
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        long startLoop = System.nanoTime();
-
-        List<Bogie> loopResult = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.capacity > 60) {
-                loopResult.add(b);
-            }
+        System.out.println("Valid Bogies:");
+        for (PassengerBogie b : bogies) {
+            System.out.println(b);
         }
-
-        long endLoop = System.nanoTime();
-
-        long startStream = System.nanoTime();
-
-        List<Bogie> streamResult = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        long endStream = System.nanoTime();
-
-        System.out.println("Loop Time (ns): " + (endLoop - startLoop));
-        System.out.println("Stream Time (ns): " + (endStream - startStream));
     }
 }
