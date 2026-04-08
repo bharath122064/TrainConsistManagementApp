@@ -1,67 +1,53 @@
 import java.util.*;
 
-abstract class Bogie {
+class PassengerBogie {
     String id;
-
-    public Bogie(String id) {
-        this.id = id;
-    }
-
-    abstract void display();
-}
-
-class PassengerBogie extends Bogie {
     String type;
     int capacity;
 
     public PassengerBogie(String id, String type, int capacity) {
-        super(id);
+        this.id = id;
         this.type = type;
         this.capacity = capacity;
     }
 
-    void display() {
-        System.out.println("Passenger Bogie -> ID: " + id + ", Type: " + type + ", Capacity: " + capacity);
-    }
-}
-
-class GoodsBogie extends Bogie {
-    String shape;
-    String cargo;
-
-    public GoodsBogie(String id, String shape, String cargo) {
-        super(id);
-        this.shape = shape;
-        this.cargo = cargo;
-    }
-
-    void display() {
-        System.out.println("Goods Bogie -> ID: " + id + ", Shape: " + shape + ", Cargo: " + cargo);
+    public String toString() {
+        return "ID: " + id + ", Type: " + type + ", Capacity: " + capacity;
     }
 }
 
 class Train {
-    List<Bogie> bogies = new ArrayList<>();
+    private ArrayList<PassengerBogie> bogies = new ArrayList<>();
 
-    public void addBogie(Bogie b) {
+    public void addBogie(PassengerBogie b) {
         bogies.add(b);
+        System.out.println("Bogie added: " + b.id);
     }
 
-    public void showTrain() {
-        System.out.println("\nTrain Consist:");
-        for (Bogie b : bogies) {
-            b.display();
+    public void removeBogie(String id) {
+        boolean removed = bogies.removeIf(b -> b.id.equals(id));
+        if (removed) {
+            System.out.println("Bogie removed: " + id);
+        } else {
+            System.out.println("Bogie not found: " + id);
         }
     }
 
-    public void totalCapacity() {
-        int total = 0;
-        for (Bogie b : bogies) {
-            if (b instanceof PassengerBogie) {
-                total += ((PassengerBogie) b).capacity;
+    public void searchBogie(String id) {
+        for (PassengerBogie b : bogies) {
+            if (b.id.equals(id)) {
+                System.out.println("Bogie found: " + b);
+                return;
             }
         }
-        System.out.println("\nTotal Passenger Capacity: " + total);
+        System.out.println("Bogie not found: " + id);
+    }
+
+    public void displayBogies() {
+        System.out.println("\nPassenger Bogies in Train:");
+        for (PassengerBogie b : bogies) {
+            System.out.println(b);
+        }
     }
 }
 
@@ -74,10 +60,12 @@ public class TrainConsistManagementApp {
         train.addBogie(new PassengerBogie("P2", "AC Chair", 60));
         train.addBogie(new PassengerBogie("P3", "First Class", 40));
 
-        train.addBogie(new GoodsBogie("G1", "Rectangular", "Coal"));
-        train.addBogie(new GoodsBogie("G2", "Cylindrical", "Oil"));
+        train.displayBogies();
 
-        train.showTrain();
-        train.totalCapacity();
+        train.searchBogie("P2");
+
+        train.removeBogie("P2");
+
+        train.displayBogies();
     }
 }
