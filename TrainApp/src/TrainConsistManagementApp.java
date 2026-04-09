@@ -1,44 +1,36 @@
-import java.util.*;
-
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
+class CargoSafetyException extends RuntimeException {
+    public CargoSafetyException(String message) {
         super(message);
     }
 }
 
-class PassengerBogie {
-    String name;
-    int capacity;
+class GoodsBogie {
+    String shape;
 
-    public PassengerBogie(String name, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Invalid capacity for bogie: " + name);
-        }
-        this.name = name;
-        this.capacity = capacity;
+    public GoodsBogie(String shape) {
+        this.shape = shape;
     }
 
-    public String toString() {
-        return name + " -> " + capacity;
+    public void assignCargo(String cargoType) {
+        try {
+            if (cargoType.equalsIgnoreCase("petroleum") && shape.equalsIgnoreCase("rectangular")) {
+                throw new CargoSafetyException("Unsafe cargo assignment: Petroleum cannot be loaded in rectangular bogie.");
+            }
+
+            System.out.println("Cargo assigned successfully!");
+
+        } catch (CargoSafetyException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Assignment process completed (logged).");
+        }
     }
 }
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
-
-        List<PassengerBogie> bogies = new ArrayList<>();
-
-        try {
-            bogies.add(new PassengerBogie("Sleeper", 72));
-            bogies.add(new PassengerBogie("AC Chair", 60));
-            bogies.add(new PassengerBogie("First Class", -10));
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        System.out.println("Valid Bogies:");
-        for (PassengerBogie b : bogies) {
-            System.out.println(b);
-        }
+        GoodsBogie bogie = new GoodsBogie("rectangular");
+        bogie.assignCargo("petroleum");
+        System.out.println("System running normally...");
     }
 }
