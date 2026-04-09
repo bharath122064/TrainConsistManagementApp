@@ -1,36 +1,47 @@
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
+class PassengerBogie {
+    String type;
+    int capacity;
 
-class GoodsBogie {
-    String shape;
-
-    public GoodsBogie(String shape) {
-        this.shape = shape;
+    public PassengerBogie(String type, int capacity) {
+        this.type = type;
+        this.capacity = capacity;
     }
 
-    public void assignCargo(String cargoType) {
-        try {
-            if (cargoType.equalsIgnoreCase("petroleum") && shape.equalsIgnoreCase("rectangular")) {
-                throw new CargoSafetyException("Unsafe cargo assignment: Petroleum cannot be loaded in rectangular bogie.");
-            }
-
-            System.out.println("Cargo assigned successfully!");
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            System.out.println("Assignment process completed (logged).");
-        }
+    public void display() {
+        System.out.println(type + " - Capacity: " + capacity);
     }
 }
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
-        GoodsBogie bogie = new GoodsBogie("rectangular");
-        bogie.assignCargo("petroleum");
-        System.out.println("System running normally...");
+
+        PassengerBogie[] bogies = {
+                new PassengerBogie("Sleeper", 72),
+                new PassengerBogie("AC Chair", 50),
+                new PassengerBogie("First Class", 30),
+                new PassengerBogie("Sleeper", 60)
+        };
+
+        System.out.println("Before Sorting:");
+        for (PassengerBogie b : bogies) {
+            b.display();
+        }
+
+        int n = bogies.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (bogies[j].capacity > bogies[j + 1].capacity) {
+                    PassengerBogie temp = bogies[j];
+                    bogies[j] = bogies[j + 1];
+                    bogies[j + 1] = temp;
+                }
+            }
+        }
+
+        System.out.println("\nAfter Sorting:");
+        for (PassengerBogie b : bogies) {
+            b.display();
+        }
     }
 }
